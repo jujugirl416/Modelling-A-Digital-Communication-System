@@ -1,0 +1,28 @@
+function output = pulseshapper (inputdata,nsamp,filtorder,rolloff)
+
+%
+%
+%% Setup
+% Define parameters.
+%nsamp = 4; % Oversampling rate
+
+%% Filter Definition
+% Define filter-related parameters.
+%filtorder = 40; % Filter order
+delay = filtorder/(nsamp*2); % Group delay (# of input samples)
+%rolloff = 0.25; % Rolloff factor of filter
+
+% Create a square root raised cosine filter.
+rrcfilter = rcosine(1,nsamp,'fir/sqrt',rolloff,delay);
+
+% Plot impulse response.
+figure('Name','Filter','NumberTitle','off'); 
+impz(rrcfilter,1);
+
+%% Transmitted Signal
+% Upsample and apply square root raised cosine filter.
+output = rcosflt(inputdata,1,nsamp,'filter',rrcfilter);
+
+% Create eye diagram for part of filtered signal.
+
+eyediagram(output(1:2000),nsamp*2);
